@@ -1,8 +1,11 @@
 package application.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import application.models.Dragon;
+import application.models.Rarity;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class DBEngine {
@@ -31,6 +34,32 @@ public class DBEngine {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<Dragon> listAllDragons() {
+        String query = "SELECT * FROM dragon";
+        List<Dragon> dragons = new ArrayList<>();
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                long id = resultSet.getLong("id"); // can be resultSet.getLong(1), but that gives back the fields from left to right
+                String name = resultSet.getString("uniqueName");
+                String text = resultSet.getString("dragonText");
+                String rarityFromDB = resultSet.getString("rarity");
+                Rarity rarity = Rarity.valueOf(rarityFromDB);
+
+                Dragon dragon = new Dragon(id, name, text, rarity);
+
+                dragons.add(dragon);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dragons;
     }
 
 }
