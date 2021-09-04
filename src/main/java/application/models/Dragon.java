@@ -68,4 +68,12 @@ public class Dragon {
     public void setElements(List<Element> elements) {
         this.elements = elements;
     }
+
+    @Override
+    public String toString() {
+        return  id + " - " +
+                uniqueName + " - " +
+                dragonText + " - " +
+                rarity;
+    }
 }

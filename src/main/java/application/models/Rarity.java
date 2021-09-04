@@ -7,5 +7,14 @@ public enum Rarity {
     VERY_RARE,
     EPIC,
     LEGENDARY,
-    HEROIC
+    HEROIC;
+
+    public static Rarity find(String name) {
+        for (Rarity rarity : Rarity.values()) {
+            if (rarity.toString().equalsIgnoreCase(name)) {
+                return rarity;
+            }
+        }
+        return Rarity.COMMON;
+    }
 }

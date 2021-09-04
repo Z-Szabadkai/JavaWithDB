@@ -45,10 +45,11 @@ public class DBEngine {
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
+                // getXXX("column_name_in_DB")
                 long id = resultSet.getLong("id"); // can be resultSet.getLong(1), but that gives back the fields from left to right
-                String name = resultSet.getString("uniqueName");
-                String text = resultSet.getString("dragonText");
-                String rarityFromDB = resultSet.getString("rarity");
+                String name = resultSet.getString("unique_name");
+                String text = resultSet.getString("dragon_text");
+                String rarityFromDB = resultSet.getString("rarity").toUpperCase();
                 Rarity rarity = Rarity.valueOf(rarityFromDB);
 
                 Dragon dragon = new Dragon(id, name, text, rarity);
