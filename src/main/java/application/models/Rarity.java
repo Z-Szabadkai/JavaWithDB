@@ -17,4 +17,8 @@ public enum Rarity {
         }
         return Rarity.COMMON;
     }
+
+    public int getDBIndex() {
+        return ordinal() + 1;
+    }
 }

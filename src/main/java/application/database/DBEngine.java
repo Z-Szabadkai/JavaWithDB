@@ -1,6 +1,7 @@
 package application.database;
 
 import application.models.Dragon;
+import application.models.Element;
 import application.models.Rarity;
 
 import java.sql.*;
@@ -79,6 +80,7 @@ public class DBEngine {
                 Rarity rarity = Rarity.valueOf(rarityFromDB);
 
                 Dragon dragon = new Dragon(id, name, text, rarity);
+                dragon.setElements(findDragonsElements(id));
 
                 dragons.add(dragon);
             }
@@ -88,5 +90,70 @@ public class DBEngine {
         }
         return dragons;
     }
+
+    public Element findElementByName (String name){
+        String query = "SELECT * FROM element WHERE element_name = ?";
+        Element element = null;
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, name);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String elementName = resultSet.getString("element_name");
+
+                element = new Element(elementName);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return element;
+    }
+
+    public List<Element> findDragonsElements(long dragonId) {
+        String query = "SELECT * FROM dragons_element WHERE dragon_id = ?";
+
+        List<Element> elements = new ArrayList<>();
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, dragonId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String elementName = resultSet.getString("element_name");
+                Element element = findElementByName(elementName);
+                elements.add(element);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return elements;
+    }
+
+    public boolean addDragonToDB(Dragon dragon) {
+        String query = "INSERT INTO dragon (unique_name, dragon_text, rarity) VALUES (?, ?, ?);";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, dragon.getUniqueName());
+            ps.setString(2, dragon.getDragonText());
+            ps.setInt(3, dragon.getRarity().getDBIndex());
+
+            ps.executeUpdate();
+            ps.close();
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
+
 
 }

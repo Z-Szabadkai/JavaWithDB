@@ -14,11 +14,15 @@ public class Dragon {
 
     public Dragon() {}
 
-    public Dragon(long id, String uniqueName, String dragonText, Rarity rarity) {
-        this.id = id;
+    public Dragon(String uniqueName, String dragonText, Rarity rarity) {
         this.uniqueName = uniqueName;
         this.dragonText = dragonText;
         this.rarity = rarity;
+    }
+
+    public Dragon(long id, String uniqueName, String dragonText, Rarity rarity) {
+        this(uniqueName, dragonText, rarity);
+        this.id = id;
     }
 
     public long getId() {
